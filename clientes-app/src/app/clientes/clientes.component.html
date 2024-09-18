@@ -1,0 +1,44 @@
+<!-- Card obtenido de la web de bootstrap v4 -->
+<div class="card border-primary mb-3 my-3">
+  <div class="card-header">Clientes</div>
+  <div class="card-body text-primary">
+    <h5 class="card-title">Listado de clientes</h5>
+    <div class="my-2 text-left">
+      <!--Con la directiva de Angular 'routerLink' indicamos la ruta('/clientes/form)') a la que tiene que ir cuando se selecciona este botón(en el módulo principal 'app.module.ts' lo asociamos al componente 'FormComponent')-->
+      <button class="btn btn-rounded btn-primary" type="button" [routerLink]="['/clientes/form']">Crear cliente</button> 
+    </div>
+    <!-- Con la directiva de Angular ngIf mostramos la estructura HTML de abajo,que se corresponde con un mensaje de alerta,en caso de que no haya ningún dato de cliente en la propiedad 'clientes'. La interrogación en 'clientes?' es para comprobar también si existe la instancia -->
+    <div class="alert alert-info" *ngIf="clientes?.length==0">
+      No hay registros en la base de datos!
+    </div>
+    <!-- Con la directiva de Angular ngIf mostramos la estructura HTML de abajao siempre y cuando se cumpla la condición 'clientes.length > 0', es decir, que haya datos de clientes almacenados en la propiedad 'clientes' de la clase asociada a este componente. La interrogación en 'clientes?' es para comprobar también si existe la instancia-->
+    <table class="table table-bordered table-striped" *ngIf="clientes?.length>0">
+      <thead>
+        <tr>
+          <th>id</th>
+          <th>nombre</th>
+          <th>apellido</th>
+          <th>email</th>
+          <th>fecha</th>
+          <th>editar</th>
+          <th>eliminar</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Con la directiva ngFor de Angular iteramos la lista contenida en la propiedad 'clientes' de la clase asociada a este compoente usando la variable 'cliente'(es un objeto que en cada iteración almacena los datos de cada cliente)-->
+        <tr *ngFor="let cliente of clientes">
+          <!-- Mostramos el contenido de las propiedades "id","nombre","apellido","email" y "createAt" del objeto de la variable "cliente" -->
+          <td>{{ cliente.id }}</td>
+          <td>{{ cliente.nombre }}</td>
+          <td>{{ cliente.apellido | uppercase }}</td> <!-- Con el uso de este filtro o pipe('|'),formateamos el apellido de la propiedad 'apellido' del objeto 'cliente' con mayúsculas -->
+          <td>{{ cliente.email }}</td>
+          <td>{{ cliente.createAt | date: "EEEE dd, MMMM yyyy"}}</td> <!-- Con el uso de este filtro o pipe('|'),formateamos la fecha de la propiedad 'createAt' del objeto 'cliente' con "EEEE dd, MMMM yyyy" -->
+          <!--Con la directiva de Angular 'routerLink' indicamos la ruta('/clientes/form/+ id_cliente)') a la que tiene que ir cuando se selecciona este botón(en el módulo principal 'app.module.ts' lo asociamos al componente 'FormComponent')-->
+          <td><button type="button" name="editar" class="btn btn-primary" [routerLink]="['/clientes/form/',cliente.id]">Editar</button></td>
+          <!-- Con el evento 'click' asociado a este botón,ejecutamos el método 'delete(cliente)' definido en la clase asociada a este componente-->
+          <td><button type="button" name="eliminar" class="btn btn-danger" (click)="delete(cliente)">Eliminar</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

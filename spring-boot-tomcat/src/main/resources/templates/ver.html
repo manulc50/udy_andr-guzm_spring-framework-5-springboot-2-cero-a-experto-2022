@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<!-- Para poder usar Thymeleaf y la seguridad con Spring Security en este documento -->
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!--  Con th:replace de Thymeleaf reemplazamos esta cabecera por la identificada con 'head' dentro de la vista 'layout' incluida en la carpeta 'layout' de 'templates' -->
+<head th:replace="layout/layout :: head"></head>
+
+<!-- Todos o la mayoría de estilos usados en esta plantilla son de Bootstrap -->
+<!-- En Thymeleaf,'@' se usa para especificar rutas o urls,y '$' se usa para acceder al contenido de alguna variable o instancia que le pasamos desde algún controlador -->
+
+<body>
+	<!-- Este div es para poder pasarle el texto identificado por 'text.cliente.factura.eliminarOk', que se obtiene de los archivos de idiomas 'messages_', al código JavaScript asociado al evento 'OnClick' del botón 'Eliminar'-->
+	<!-- Para ello, desde dicho código se accede a este elemento mediante su id('i18n_eliminar_factura') y se obtiene el valor de dicho texto -->
+	<div id="i18n_eliminar_factura" th:text="#{text.cliente.factura.eliminarOk}" style="display: none;"></div>
+	<!--  Con th:replace de Thymeleaf reemplazamos esta cabecera de página por la identificada con 'header' dentro de la vista 'layout' incluida en la carpeta 'layout' de 'templates' -->
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+
+		<div class="card bg-light">
+			<!-- Con th:text de Thymeleaf  mostramos el 'título' que se lo pasamos desde el controlado 'ClienteController' -->
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+			
+			<h4 class="card-title">
+				<!-- Con th:text de Thymeleaf mostramos el valor del texto cuyo identificador se indica entre paréntesis con '#' y que se obtiene de los archivos de idiomas 'messages_'  -->
+				<!-- Con th:href de Thymeleaf nos dirigimos a la ruta '/factura/form/' + cliente_id a partir de la instancia 'cliente' que se le pasa a esta vista desde el controlador 'ClienteController' -->
+				<!-- Crear factura sólo lo pueden hacer los usuarios con role 'ADMIN' y esto lo verificamos con 'sec:authorize="hasRole('ROLE_ADMIN')"' -->
+				<a sec:authorize="hasRole('ROLE_ADMIN')" class="btn btn-primary btn-xs" th:href="@{/factura/form/} + ${cliente.id}" th:text="#{text.cliente.factura.crear}"></a>
+			</h4>
+			
+				<!-- Informacion del cliente -->
+				<!-- Con th:if de Thymeleaf comprobamos si el cliente tiene foto accediendo a la propiedad 'foto' de la instancia 'cliente' que se le pasa desde el controlador 'ClienteController' -->
+				<!-- En caso afirmativo, se muestra la foto del cliente -->
+				<!-- Con th:src de Thymeleaf indicamos la ruta donde se localiza la imagen.Esta es '/uploads/' + foto_cliente  -->
+				<img th:if="${#strings.length(cliente.foto) > 0}"
+					class="img-thumbnail rounded float-left" style="max-width: 25%;"
+					th:src="@{'/uploads/' + ${cliente.foto}}" th:alt="${cliente.foto}" />
+
+				<ul class="list-group">
+					<!-- Con th:text de Thymeleaf mostramos el nombre del cliente a partir de la instancia 'cliente' que se la pasamos desde el controlado 'ClienteController' -->
+					<li class="list-group-item active" th:text="${cliente.nombre}"></li>
+					<!-- Con th:text de Thymeleaf mostramos el apellido del cliente a partir de la instancia 'cliente' que se la pasamos desde el controlado 'ClienteController' -->
+					<li class="list-group-item" th:text="${cliente.apellido}"></li>
+					<!-- Con th:text de Thymeleaf mostramos el email del cliente a partir de la instancia 'cliente' que se la pasamos desde el controlado 'ClienteController' -->
+					<li class="list-group-item" th:text="${cliente.email}"></li>
+					<!-- Con th:text de Thymeleaf mostramos la fecha de creación del cliente a partir de la instancia 'cliente' que se la pasamos desde el controlado 'ClienteController' -->
+					<li class="list-group-item" th:text="${cliente.createAt}"></li>
+				</ul>
+				<!-- Información de las facturas asociadas al cliente -->
+				<!-- Con th:if de Thymeleaf comprobamos si el cliente no tiene facturas asociadas accediendo a la propiedad "facturas" de la instancia 'cliente' que se le pasa desde el controlador 'ClienteController' -->
+				<!-- En caso afirmativo, se muestra un mensaje de alerta -->
+				<!-- Con th:text de Thymeleaf mostramos el valor del texto cuyo identificador se indica entre paréntesis con '#' y que se obtiene de los archivos de idiomas 'messages_'  -->
+				<div th:if="${#lists.isEmpty(cliente.facturas)}" class="alert alert-info my-4" th:text="#{text.cliente.detalle.no.facturas} + ' ' + ${cliente.nombre} + ' ' + ${cliente.apellido}"></div>
+				<!-- Con th:if de Thymeleaf comprobamos si el cliente tiene facturas asociadas accediendo a la propiedad "facturas" de la instancia 'cliente' que se le pasa desde el controlador 'ClienteController' -->
+				<!-- En caso afirmativo, se muestra una tabla con las facturas del cliente -->
+				<table th:if="${not #lists.isEmpty(cliente.facturas)}" class="table table-bordered table-striped my-4">
+					<thead>
+						<tr>
+							<!-- Con th:text de Thymeleaf mostramos el valor de los textos cuyos identificadores se indican entre paréntesis con '#' y que se obtienen de los archivos de idiomas 'messages_'  -->
+							<th th:text="#{text.cliente.factura.folio}">folio</th>
+							<th th:text="#{text.cliente.factura.descripcion}">descripcion</th>
+							<th th:text="#{text.cliente.factura.fecha}">fecha</th>
+							<th th:text="#{text.cliente.factura.total}">total</th>
+							<!-- Esta opción sólo la pueden ver los usuarios con role 'ADMIN' -->
+							<th sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{text.cliente.factura.detalle}">ver</th>
+							<!-- Esta opción sólo la pueden ver los usuarios con role 'ADMIN' -->
+							<th sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{text.cliente.factura.eliminar}">eliminar</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+					<!-- Con th:each de Thymeleaf usamos la variable "factura" para iterar la lista de facturas contenida en la propiedad "facturas" del atributo "clientes" que se le pasa desde el controlador "ClienteController" -->
+					<tr th:each="factura: ${cliente.facturas}">
+						<!-- Con th:text mostramos el valor de las propiedades "id","descripcion","apellido","createAt" y "total" del objeto contenido en la variable "factura" -->
+						<td th:text="${factura.id}"></td>
+						<td th:text="${factura.descripcion}"></td>
+						<td th:text="${factura.createAt}"></td>
+						<td th:text="${factura.total}"></td>
+						<!-- Esta opcion sólo la pueden ver los usuarios con role 'ADMIN' -->
+						<td sec:authorize="hasRole('ROLE_ADMIN')">
+							<!-- Con th:href de Thymeleaf nos dirigimos a la ruta '/factura/ver' + factura_id a partir de cada instancia 'factura' contenida en la instancia 'cliente' que se le pasa a esta vista desde el controlador 'ClienteController' -->
+							<!-- Con th:text de Thymeleaf mostramos el valor del texto cuyo identificador se indica entre paréntesis con '#' y que se obtiene de los archivos de idiomas 'messages_'  -->
+							<a class="btn btn-primary btn-xs" th:href="@{'/factura/ver/' + ${factura.id}}" th:text="#{text.cliente.factura.detalle}"></a>
+						</td>
+						<!-- Esta opción sólo la pueden ver los usuarios con role 'ADMIN'  -->
+						<td sec:authorize="hasRole('ROLE_ADMIN')">
+							<!-- Con th:href de Thymeleaf nos dirigimos a la ruta '/factura/eliminar' + factura_id a partir de cada instancia 'factura' contenida en la instancia 'cliente' que se le pasa a esta vista desde el controlador 'ClienteController' -->
+							<!-- Con th:text de Thymeleaf mostramos el valor del texto cuyo identificador se indica entre paréntesis con '#' y que se obtiene de los archivos de idiomas 'messages_'  -->
+							<!-- Con el evento 'onclik' del enlace y el metodo JavaScript 'confirm()' le preguntamos al usuario si realmente desea eliminar la factura. Para ello, se accede al elemento div con id 'i18n_eliminar_factura' y se obtiene el valor del texto contenido en él que se trata del mensaje de aviso traducido a su idioma correspondiente -->
+							<a class="btn btn-danger btn-xs" th:href="@{'/factura/eliminar/' + ${factura.id}}" th:text="#{text.cliente.factura.eliminar}" onclick="return confirm(document.getElementById('i18n_eliminar_factura').innerHTML);"></a>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<!--  Con th:replace de Thymeleaf reemplazamos este footer o pie de página por el identificado con 'footer' dentro de la vista 'layout' incluida en la carpeta 'layout' de 'templates' -->
+	<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>

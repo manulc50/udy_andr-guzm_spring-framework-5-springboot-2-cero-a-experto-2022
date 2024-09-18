@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title th:text="${error}"></title>
+</head>
+<body>
+	<!-- En este caso los atributos "error","status","message" y "timestamp" no son los atributos predefinidos del error, son nuestros atributos personalizados pasados a esta vista desde el método handler "aritmeticaErrorException" del controlador "ErrorHandlerController" -->	
+	<h1 th:text="${error}"></h1>
+	<div th:text="${status}"></div>
+	<div th:text="${message}"></div>
+	<div th:text="${timestamp}"></div>
+</body>
+</html>

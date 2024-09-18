@@ -1,0 +1,93 @@
+<!-- Estructura HTML para mostrar una lista de errores de validación que nos pueda llegar desde nuestro backend(API Rest de clientes)-->
+<!-- Con la directiva de Angular ngIf comprobamos si hay errores de validación verificando la propiedad 'errores' de la clase asociada a este componente.Para ello,miramos que exista la instancia('errores?') y,si existe, miramos que haya algún elemento('errores.length > 0') -->
+<ul class="alert alert-danger" *ngIf="errores?.length > 0">
+  <!-- Con la directiva ngFor, repetimos esta estructura HTML tantas veces como elemntos haya en la propiedad 'errores' y mostramos el contenido de cada elemento usando los paréntesis-->
+  <li *ngFor="let error of errores">{{ error }}</li>
+</ul>
+
+<div class="card bg-dark text-white my-2">
+  <div class="card-header">{{ titulo }}</div>
+  <div class="card-body">
+    <!-- Antes -> <form (ngSubmit)="create()">  Con esta directiva de Angular, asociamos el método create(),definido en la clase de este componente, con el evento submit del formulario). Después -> Se implementa con botones más abajo-->
+    <!-- Creamos una variable 'clienteForm' asociada al formulario que contiene toda la información relacionado con dicho formulario.Esto nos va a permitir desactivar el botón de submit en caso de que haya errores de validación en el formulario -->
+    <form #clienteForm=ngForm>
+
+      <div class="form-group row">
+        <label for="nombre" class="col-form-label col-sm-2">Nombre</label>
+        <div class="col-sm-6">
+          <!-- Con ngModel de Angular,la información del 'input' se almacena en la propiedad 'nombre' del objeto 'cliente' definido en la clase de este componente -->
+          <!-- Validaciones del input:Con 'required' indicamos que el input es obligatorio y con 'minlength="4" obligamos a que el campo tenga como mínimo 4 caracteres'-->
+          <!-- Creamos una variable 'nombre' asociada al input que contiene toda la información relacionado con dicho input,como los estados de las validaciones,entre otras cosas-->
+          <input type="text" class="form-control" [(ngModel)]="cliente.nombre" name="nombre" #nombre=ngModel> <!--Para desactivar la validación por parte de este cliente,comentamos estos atributos del elemento input; required minlength="4". Esto es para probar la validación desde nuestro backend que hay al principio de este documento-->
+          <!-- Si el input anterior no cumple con alguna de las validaciones indicadas,con la directiva ngIf se habilita la estructura HTML anterior para mostrar un mensaje de alerta al usuario-->
+           <!-- La propiedad 'invalid' indica si hay o no errores de validación en el campo.La propiedad 'dirty' indica si hay o no errores mientras se escribe en el input, mientras que la propiedad 'touched' indica si hay o no errores al final,es decir, una vez que hemos terminado de escribir en el input y nos hemos ido de su foco -->
+          <div class="alert alert-danger" *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
+            <!-- Estructura HTML que se va a mostrar cuando el error de validación del input anterior sea por el atributo 'required'-->
+            <div *ngIf="nombre.errors.required">
+              Nombre es requerido
+            </div>
+            <!-- Estructura HTML que se va a mostrar cuando el error de validación del input anterior sea por el atributo 'minlength'-->
+            <div *ngIf="nombre.errors.minlength"> 
+              El nombre debe tener al menos 4 caracteres
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+          <label for="apellido" class="col-form-label col-sm-2">Apellido</label>
+          <div class="col-sm-6">
+            <!-- Con ngModel de Angular,la información del 'input' se almacena en la propiedad 'apellido' del objeto 'cliente' definido en la clase de este componente -->
+            <!-- Validaciones del input:Con 'required' indicamos que el input es obligatorio -->
+            <!-- Creamos una variable 'apellido' asociada al input que contiene toda la información relacionado con dicho input,como los estados de las validaciones,entre otras cosas--> 
+            <input type="text" class="form-control" [(ngModel)]="cliente.apellido" name="apellido" #apellido=ngModel>  <!--Para desactivar la validación por parte de este cliente,comentamos estos atributos del elemento input; required. Esto es para probar la validación desde nuestro backend que hay al principio de este documento-->
+            <!-- Si el input anterior no cumple con alguna de las validaciones indicadas,con la directiva ngIf se habilita la estructura HTML anterior para mostrar un mensaje de alerta al usuario-->
+            <!-- La propiedad 'invalid' indica si hay o no errores de validación en el campo.La propiedad 'dirty' indica si hay o no errores mientras se escribe en el input, mientras que la propiedad 'touched' indica si hay o no errores al final,es decir, una vez que hemos terminado de escribir en el input y nos hemos ido de su foco -->
+            <div class="alert alert-danger" *ngIf="apellido.invalid && (apellido.dirty || apellido.touched)"> 
+              <!-- Estructura HTML que se va a mostrar cuando el error de validación del input anterior sea por el atributo 'required'-->
+              <div *ngIf="apellido.errors.required">
+                Apellido es requerido
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group row">
+            <label for="email" class="col-form-label col-sm-2">Email</label>
+            <div class="col-sm-6">
+              <!-- Con ngModel de Angular,la información del 'input' se almacena en la propiedad 'email' del objeto 'cliente' definido en la clase de este componente -->
+              <!-- Validaciones del input:Con 'required' indicamos que el input es obligatorio y con 'email' verificamos que sea un formato correcto de email -->
+              <!-- creamos una variable 'email' asociada al input que contiene toda la información relacionado con dicho input,como los estados de las validaciones,entre otras cosas--> 
+              <input type="text" class="form-control" [(ngModel)]="cliente.email" name="email" #email=ngModel> <!--Para desactivar la validación por parte de este cliente,comentamos estos atributos del elemento input; required email. Esto es para probar la validación desde nuestro backend que hay al principio de este documento-->
+              <!-- Si el input anterior no cumple con alguna de las validaciones indicadas,con la directiva ngIf se habilita la estructura HTML anterior para mostrar un mensaje de alerta al usuario-->
+              <!-- La propiedad 'invalid' indica si hay o no errores de validación en el campo.La propiedad 'dirty' indica si hay o no errores mientras se escribe en el input, mientras que la propiedad 'touched' indica si hay o no errores al final,es decir, una vez que hemos terminado de escribir en el input y nos hemos ido de su foco -->
+              <div class="alert alert-danger" *ngIf="email.invalid && (email.dirty || email.touched)"> 
+                <!-- Estructura HTML que se va a mostrar cuando el error de validación del input anterior sea por el atributo 'required'-->
+                <div *ngIf="email.errors.required">
+                  Email es requerido
+                </div>
+                <!-- Estructura HTML que se va a mostrar cuando el error de validación del input anterior sea por el atributo 'email'-->
+                <div *ngIf="email.errors.email">
+                  Email debe tener un formato vádilo
+                </div>
+              </div>
+            </div>
+          </div>
+
+        <div class="form-group row">
+          <div class="col-sm-6">
+            <!-- Con la directiva de Angular *ngIf comprobamos si no existe el id del cliente(significa que aún no se ha creado) y,en caso afirmativo,se muestra el botón 'Crear'.En caso contrario,se muestra lo que haya en el template 'elseBlock'.Con '(click)="create()"'' asociamos el evento 'click' del botón al método 'create()' definido en la clase de este componente -->
+            <!-- Con los corchetes sobre el atributo 'disabled' le asociamos el resultado de la expresión '!clienteForm.form.valid';'valid' está a true cuando las validaciones del formulario, cuya variable asociada es 'clienteForm, son correctas -->
+            <button class="btn btn-primary" role="button" (click)="create()" *ngIf="!cliente.id else elseBlock" [disabled]="!clienteForm.form.valid">Crear</button>
+            <!-- Template que se va a mostrar sólo si el id del cliente existe.Sustiyute el botón 'Crear' por el botón 'Editar'-->
+            <ng-template #elseBlock>
+              <!-- Con '(click)="update()"' asociamos el evento 'click' del botón al método 'update()' definido en la clase de este componente-->
+              <!-- Con los corchetes sobre el atributo 'disabled' le asociamos el resultado de la expresión '!clienteForm.form.valid';'valid' está a true cuando las validaciones del formulario, cuya variable asociada es 'clienteForm, son correctas -->
+              <button class="btn btn-primary" role="button" (click)="update()" [disabled]="!clienteForm.form.valid">Editar</button>
+            </ng-template>
+          </div>
+        </div>
+
+    </form>
+  </div>
+</div>

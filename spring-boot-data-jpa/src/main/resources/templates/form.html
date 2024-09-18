@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<!-- Agregamos el namespace para porder trabajar con Thymeleaf -->
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Todos o la mayoría de estilos usados en esta plantilla son de Bootstrap -->
+<!-- En Thymeleaf,'@' se usa para especificar rutas o urls,y '$' se usa para acceder al contenido de alguna variable o instancia que le pasamos desde algún controlador -->
+
+<!--  Con th:replace de Thymeleaf reemplazamos esta cabecera por la identificada con 'head' dentro de la vista 'layout' incluida en la carpeta 'layout' de 'templates' -->
+<head th:replace="layout/layout :: head"></head>
+<body>
+	<!--  Con th:replace de Thymeleaf reemplazamos esta cabecera de página por la identificada con 'header' dentro de la vista 'layout' incluida en la carpeta 'layout' de 'templates' -->
+	<header th:replace="layout/layout :: header"></header>
+	<!-- Con my-4 de Bootstrap damos un padding en el eje y de tamaño 4 -->
+	<div class="container py-4">
+		<!-- Tarjeta de Bootstrap -->
+		<div class="card bg-dark text-white">
+			<!-- Obtenemos del controlador el atributo 'titulo' y lo mostramos con th:text de Thymeleaf-->
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+				<!-- Estructura HTML div que muestra los mensajes de error de validación de los campos del formulario -->
+				<!-- Para poder mostrar los errores de validación de los campos del formulario en esta estructura HTML div, tenemos que hacer referencia al mismo objeto("cliente") usado en dicho formulario con "th:object="${cliente}", es decir, el objeto "cliente" contiene los datos del cliente introducidos en el formulario, los controles de dicho formulario, los errores de validación, entre otras cosas. -->
+				<div th:object="${cliente}" >
+					<!-- Con th:if verificamos si hay errores de validación en los campos del formulario('*' hace referencia a todos los campos del formulario), y en caso afirmativo, creamos una lista no ordenada con la estructura HTML ul -->
+					<ul th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+						<!-- Iteramos, usando la variable "err", los errores de validación de todos los campos del formulario('*' hace referencia a todos los campos del formulario) y, por cada iteración, creamos una estructura HTML li mostrando, con th:text, el contenido actual de la variable "err" que contiene el mensaje de error -->
+						<li th:each="err: ${#fields.errors('*')}" th:text="${err}"></li>
+					</ul>
+				</div>
+				<!-- Formulario de clientes -->
+				<!-- Cuando hagamos un submit del formulario,lanza una petición http Post a la ruta indicada en el "action"('/form').Con th:object indicamos que vamos a usar el objeto "cliente" del controlador("ClienteController") en el formulario -->
+				<form th:action="@{/form}" th:object="${cliente}" method="post">
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label">Nombre</label>
+						<div class="col-sm-6">
+							<!-- Con * y th:field mapeamos los que introduzca el usuario en la propiedad "nombre" del objecto cliente -->
+							<Input type="text" th:field="*{nombre}" class="form-control" th:errorclass="'form-control alert-danger'"/>
+							<!-- Con th:if comprobamos si hay errores de validación para la propiedad 'nombre' de la instancia 'cliente' asociada a este formulario, y con th:errors, sobre la misma propiedad, nos da los mensajes de error a mostrar -->
+							<small class="form-text text-danger" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label">Apellido</label>
+						<div class="col-sm-6">
+							<!-- Con * y th:field mapeamos los que introduzca el usuario en la propiedad "apellido" del objecto cliente -->
+							<Input type="text" th:field="*{apellido}" class="form-control" th:errorclass="'form-control alert-danger'"/>
+							<!-- Con th:if comprobamos si hay errores de validación para la propiedad 'apellido' de la instancia 'cliente' asociada a este formulario, y con th:errors, sobre la misma propiedad, nos da los mensajes de error a mostrar -->
+							<small class="form-text text-danger" th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label">Email</label>
+						<div class="col-sm-6">
+							<!-- Con * y th:field mapeamos los que introduzca el usuario en la propiedad "email" del objecto cliente -->
+							<!-- El tipo de campo lo pasamos de 'email' a 'text' para que la validación sea la de Spring y no la de HTML5 -->
+							<Input type="text" th:field="*{email}" class="form-control" th:errorclass="'form-control alert-danger'"/></td>
+							<!-- Con th:if comprobamos si hay errores de validación para la propiedad 'email' de la instancia 'cliente' asociada a este formulario, y con th:errors, sobre la misma propiedad, nos da los mensajes de error a mostrar -->
+							<small class="form-text text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label">Fecha</label>
+						<div class="col-sm-6">
+							<!-- Con * y th:field mapeamos los que introduzca el usuario en la propiedad "fecha" del objecto cliente -->
+							<Input type="text" th:field="*{fecha}" class="form-control" th:errorclass="'form-control alert-danger'"/></td>
+							<!-- Con th:if comprobamos si hay errores de validación para la propiedad 'fecha' de la instancia 'cliente' asociada a este formulario, y con th:errors, sobre la misma propiedad, nos da los mensajes de error a mostrar -->
+							<small class="form-text text-danger" th:if="${#fields.hasErrors('fecha')}" th:errors="*{fecha}"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<div class="col-sm-6">
+							<!-- En Thymeleaf,se usa th:value para poner texto a los elementos con atributos value desde propiedades de un controlador -->
+							<!-- Este elemento de tipo submit va a realizar una peticion http de tipo POST hacia ruta indicada en "action" -->
+							<Input type="submit" th:value="${textoBoton}" class="btn btn-secondary"></Input>
+							
+						</div>
+					</div>
+					<!-- En vez de usar un campo oculto para el id,otra solucion de buena practica para mantener los datos entre el controlados y la vista es usar atributos de sesión en el controlador-->
+					<!-- El id se oculta de cara al usuario que maneja la aplicacion,pero es necesario hacer esto para que el valor del id pueda 'viajar' hasta el controlador cuando queremos realizar una edición y asi no perderlo  -->
+					<!-- <Input type="hidden" th:field="*{id}"/> -->
+				</form>
+			</div>
+		</div>
+	</div>
+	<!--  Con th:replace de Thymeleaf reemplazamos este footer o pie de página por el identificado con 'footer' dentro de la vista 'layout' incluida en la carpeta 'layout' de 'templates' -->
+	<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>

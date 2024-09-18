@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<!-- Para poder usar Thymeleaf en este documento -->
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Remplaza con Thymeleaf esta cabecera por otra(Usa la cabecera 'head' definida en la ruta 'layout/layout.html') con las hojas de estilo de Bootstrap entre otras cosas  -->
+<head th:replace="layout/layout :: head"></head>
+
+<!-- Todos o la mayoría de estilos usados en esta plantilla son de Bootstrap -->
+<!-- En Thymeleaf,'@' se usa para especificar rutas o urls,y '$' se usa para acceder al contenido de alguna variable o instancia que le pasamos desde algún controlador -->
+
+<body>
+	<!--  Con th:replace de Thymeleaf reemplazamos esta cabecera de página por la identificada con 'header' dentro de la vista 'layout' incluida en la carpeta 'layout' de 'templates' -->
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+		<div class="card bg-danger text-white">
+			<!-- Con th:text de Thymeleaf mostramos el valor del texto cuyo identificador se indica entre paréntesis con '#' y que se obtiene de los archivos de idiomas 'messages_'  -->
+			<div class="card-header" th:text="#{text.security.error.403.titulo}">Error: Acceso Denegado!</div>
+			<div class="card-body">
+				<!-- Con th:utext de Thymeleaf mostramos el valor del texto cuyo identificador se indica entre paréntesis con '#' y que se obtiene de los archivos de idiomas 'messages_'  -->
+				<!-- A diferencia de 'th:text',usamos 'th:utext' para que no escape los caraceres especiales(En el texto hay etiquetas HTML a interpretar) -->
+				<!-- A este identificador le pasamos el valor de la propiedad "name" del objeto "authentication" que se corresponde con el nombre del usuario autenticado  -->
+				<h5 class="card-title" th:utext="#{text.security.error.403.permiso(${#authentication.name})}"></h5> <!--  -->
+				<!-- Con th:href de Thymeleaf navegamos a la ruta '/listar'.Las rutas siempre se indican con '@{}' -->
+				<!-- Con th:text de Thymeleaf mostramos el valor del texto cuyo identificador se indica entre paréntesis con '#' y que se obtiene de los archivos de idiomas 'messages_'  -->
+				<a th:href="@{/listar}" class="btn btn-outline-light" role="button" th:text="#{text.security.error.403.volver}">Ir al inicio</a>
+			</div>
+		</div>
+	</div>
+	
+	<!--  Con th:replace de Thymeleaf reemplazamos este footer o pie de página por el identificado con 'footer' dentro de la vista 'layout' incluida en la carpeta 'layout' de 'templates' -->
+	<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>

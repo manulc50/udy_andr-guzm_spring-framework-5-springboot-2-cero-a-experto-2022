@@ -1,0 +1,15 @@
+<!-- Con '(click)' indicamos que cuando se produzca el evento de botón 'click',se ejecute el método 'setHabilitar()' implementado en la clase de este componente  -->
+<button type="button" class="btn btn-primary my-3" (click)="setHabilitar()">
+  <!-- Si la propiedad "habilitar" de la clase asociada a este componente es true,se le da el texto "Ocultar" al botón.En caso contrario, se le da el texto "Mostrar" -->
+  {{ habilitar == true ? 'Ocultar' : 'Mostrar' }}
+</button>
+<div class="card my-3">
+  <div class="card-header">
+    Listado de cursos
+  </div>
+  <!-- El listado de cursos contenido en la propiedad 'listaCursos' se va a mostrar o no en función del valor de la propiedad boolean 'habilitar'.Esto se consigue mediante la directiva de Angular 'ngIf' igualada a una condición-->
+  <ul class="list-group" *ngIf="habilitar == true">
+    <!--'listaCursos' es un array con nombres de cursos definido en la clase de este componente.Con la directiva de Angular 'ngFor' iteramos este array y creamos un componente 'li' con el nombre del curso('{{ curso }}') por cada iteración-->
+    <li class="list-group-item" *ngFor="let curso of listaCursos">{{ curso }}</li>
+  </ul>
+</div>

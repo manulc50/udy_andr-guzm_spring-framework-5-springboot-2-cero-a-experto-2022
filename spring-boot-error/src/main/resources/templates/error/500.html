@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Ha ocurrido un error Ooops!</title>
+</head>
+<body>
+	<h1>Ha ocurrido un error Ooops!</h1>
+	<!-- Los atributos "error","status","message","timestamp" y "trace" son atributos predefinidos(no los hemos creado nosotros) que contienen el tipo de error, el código o estado del error, el mensaje del error, el timestamp(fecha y hora) del error y la traza del error respectivamente -->
+	<div th:text="${error}"></div>
+	<div th:text="${status}"></div>
+	<div th:text="${message}"></div>
+	<div th:text="${timestamp}"></div>
+	<hr/>
+	<div th:text="${trace}"></div>
+</body>
+</html>

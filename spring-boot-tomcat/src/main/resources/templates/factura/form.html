@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<!-- Para poder usar Thymeleaf en este documento -->
+<html xmlns:th="http://www.thymeleaf.org">
+<!--  Con th:replace de Thymeleaf reemplazamos esta cabecera por la identificada con 'head' dentro de la vista 'layout' incluida en la carpeta 'layout' de 'templates' -->
+<head th:replace="layout/layout :: head"></head>
+
+<!-- Todos o la mayoria de estilos usados en esta plantilla son de Bootstrap -->
+<!-- En Thymeleaf,'@' se usa para especificar rutas o urls,y '$' se usa para acceder al contenido de alguna variable o instancia que le pasamos desde algún controlador -->
+
+<body>
+	<!--  Con th:replace de Thymeleaf reemplazamos esta cabecera de página por la identificada con 'header' dentro de la vista 'layout' incluida en la carpeta 'layout' de 'templates' -->
+	<header th:replace="layout/layout :: header"></header>
+	
+	<!--  Contenedor base con algunos estilos de Bootstrap -->
+	<div class="container py-4">
+		<!-- Tarjeta de Bootstrap -->
+		<div class="card bg-light">
+			<!-- Obtenemos del controlador el atributo 'titulo' y lo mostramos con th:text de Thymeleaf-->
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+				<h4 class="card-title">
+					<!-- Con th:href de Thymeleaf y '@{}' nos vamos a la ruta '/ver/' + cliente_id -->
+					<!-- Con th:utext de Thymeleaf mostramos el valor del texto cuyo identificador se indica entre paréntesis con '#' y que se obtiene de los archivos de idiomas 'messages_'  -->
+					<!-- A diferencia de 'th:text',usamos 'th:utext' para que no escape los caraceres especiales(En el texto hay etiquetas HTML a interpretar) -->
+					<a class="btn btn-light btn-xs" th:href="@{'/ver/' + ${factura.cliente.id}}" th:utext="#{text.global.volver}"></a>
+				</h4>
+
+				<!-- Formulario de facturas -->
+				<!-- Cuando hagamos un submit del formulario,lanza una petición http Post a la ruta indicada en el "action"('/factura/form/' +  id_cliente) -->
+				<!-- Con th:object indicamos que vamos a usar el objeto "factura" del controlador 'FacturaController' en el formulario -->
+				<!-- Es necesario pasarle el id del cliente a la ruta '/factura/form/' donde se va a realizar la petición http Post, para que se siga manteniendo la url '/factura/form/' + id_cliente si se desea cambiar de idioma y evitar un error, ya que si solo hacemos la petición http Post a la ruta '/factura/form/' y se cambia de idioma, dicho cambio redirige por petición http Get a esa ruta que no está asociada a ningún método handler del controlador 'FacturaController'  -->
+				<form th:action="@{'/factura/form/' + ${factura.cliente.id}}" th:object="${factura}" method="post"> <!-- Lanza una petición http post a la url '/factura/form/' cuando se pulsa el botón de submit.-->
+					<div class="form-group row">
+						<!-- Con th:text de Thymeleaf mostramos el valor del texto cuyo identificador se indica entre paréntesis con '#' y que se obtiene de los archivos de idiomas 'messages_'  -->
+						<label for="cliente" class="col-sm-2 col-form-label" th:text="#{text.factura.form.cliente}"></label>
+						<div class="col-sm-6">
+							<!-- En Thymeleaf,se usa th:value para poner texto a los elementos con atributos value -->
+							<!-- Con th:value establecemos el texto de este elemento a partir del contenido de las propiedades "nombre" y "apellido" de la propiedad "cliente" del atributo "factura" que se le pasa desde el controlador "FacturaController" -->
+							<!-- El atributo "disabled" de este elemento puesto a "disabled" hace que este input sea solo de lectura, es decir, no se puede escribir en él -->
+							<input name="cliente" th:value="${factura.cliente.nombre} + ' ' + ${factura.cliente.apellido}" class="form-control" disabled='disabled' />
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<!-- Con th:text de Thymeleaf mostramos el valor del texto cuyo identificador se indica entre paréntesis con '#' y que se obtiene de los archivos de idiomas 'messages_'  -->
+						<label for="descripcion" class="col-sm-2 col-form-label" th:text="#{text.cliente.factura.descripcion}"></label>
+						<div class="col-sm-6">
+							<!-- Con * y th:field mapeamos los datos que introduzca el usuario en la propiedad "descripcion" del objecto "factura" -->
+							<input type="text" th:field="*{descripcion}" class="form-control" th:errorclass="'form-control is-invalid'" />
+							<!-- Con th:if comprobamos si hay errores de validación para la propiedad 'descripcion' de la instancia 'factura' asociada a este formulario, y con th:errors, sobre la misma propiedad, nos da los mensajes de error a mostrar -->
+							<div class="invalid-feedback" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></div>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<!-- Con th:text de Thymeleaf mostramos el valor del texto cuyo identificador se indica entre paréntesis con '#' y que se obtiene de los archivos de idiomas 'messages_'  -->
+						<label for="observacion" class="col-sm-2 col-form-label" th:text="#{text.factura.form.observacion}"></label>
+						<div class="col-sm-6">
+							<!-- Con * y th:field mapeamos los datos que introduzca el usuario en la propiedad "observacion" del objecto "factura" -->
+							<textarea th:field="*{observacion}" class="form-control"></textarea>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<!-- Con th:text de Thymeleaf mostramos el valor del texto cuyo identificador se indica entre paréntesis con '#' y que se obtiene de los archivos de idiomas 'messages_'  -->
+						<label for="buscar_producto" class="col-sm-2 col-form-label" th:text="#{text.factura.form.buscar}"></label>
+						<div class="col-sm-6">
+							<!-- Este elemento input con id 'buscar_producto' está asociado a un evento de autocompletado con Ajax y JQuery(autocomplete-productos.html) para ir mostrando dinámicamente los productos localizados en la base de datos-->
+							<input type="text" name="buscar_producto" id="buscar_producto" class="form-control" />
+						</div>
+					</div>
+
+					 <!--  Con th:replace de Thymeleaf reemplazamos esta tabla por la identificada con 'itemsFactura' dentro de la vista 'plantilla-items' incluida en la carpeta 'factura' de 'templates' -->
+					 <table th:replace="factura/plantilla-items :: itemsFactura"></table>
+
+					<!-- Tabla que contiene los productos seleccionados -->
+					 <table id="cargarItemProductos" class="table table-sm table-striped table-hover">
+						<thead>
+							<tr>
+								<!-- Con th:text de Thymeleaf mostramos el valor de los textos cuyos identificadores se indican entre paréntesis con '#' y que se obtienen de los archivos de idiomas 'messages_'  -->
+								<th th:text="#{text.factura.form.item.nombre}">Nombre</th>
+								<th th:text="#{text.factura.form.item.precio}">Precio</th>
+								<th th:text="#{text.factura.form.item.cantidad}">Cantidad</th>
+								<th th:text="#{text.factura.form.item.total}">Total</th>
+								<th th:text="#{text.factura.form.item.eliminar}">Eliminar</th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- Aquí se van a ir cargando por JQuery(autocomplete-productos.html) las filas de los productos seleccionados -->
+						</tbody>
+					</table>
+					<h5>
+						<!-- El valor de este elemento span con id 'gran_total' se va a ir actualizando mediante JQuery(autocomplete-productos.html)-->
+						<!-- Con th:text de Thymeleaf mostramos el valor del texto cuyo identificador se indica entre paréntesis con '#' y que se obtiene de los archivos de idiomas 'messages_'  -->
+						<span th:text="#{text.factura.form.total}">Total</span> <span class="badge badge-secondary" id="gran_total">0</span>
+					</h5>
+
+					<div class="form-group row">
+						<div class="col-sm-6">
+							<!-- En Thymeleaf,se usa th:value para poner texto a los elementos con atributos value -->
+							<!-- Con th:value establecemos el texto de este elemento a partir del contenido del atributo "titulo" que se le pasa desde el controlador "FacturaController" -->
+							<!-- Este elemento de tipo submit va a realizar una peticion http de tipo POST hacia ruta indicada en "action" -->
+							<input type="submit" th:value="${titulo}" class="btn btn-secondary" />
+						</div>
+					</div>
+					<!-- No hace falta poner manualmente aquí la protección de seguridad 'CSRF' ya que las últimas versiones de Spring Security la añade automáticamente por defecto en los formularios y sería redundante  -->
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<!-- La idea de este input oculto es para que Thymeleaf añada el nombre del proyecto(nombre del archivo war) automáticamente a esta ruta "/factura/cargar_productos/" para no tener que hacerlo manualmente por si acaso se cambia en un futuro. 
+	     Ésto lo hacemos porque un servidor Tomcat externo utiliza como "context path" el nombre del proyecto(nombre del archivo war) correspondiente a una aplicación desplegada.
+	     Esta ruta se utiliza en el código JS del HTML "autocomplete-productos" para realizar una petición http que obtenga los productos para realizar el autocompletado. -->
+	<input type="hidden" id="urlAjax" th:value="@{'/factura/cargar_productos/'}">
+	<!--  Con th:replace de Thymeleaf reemplazamos este footer o pie de página por el identificado con 'footer' dentro de la vista 'layout' incluida en la carpeta 'layout' de 'templates' -->
+	<footer th:replace="layout/layout :: footer"></footer>
+	<!--  Con th:replace de Thymeleaf reemplazamos este script por el identificado con 'javascript' dentro de la vista 'autocomplete-productos' incluida en las carpetas 'factura/js/' de 'templates' -->
+	<script th:replace="factura/js/autocomplete-productos :: javascript"></script>
+</body>
+</html>

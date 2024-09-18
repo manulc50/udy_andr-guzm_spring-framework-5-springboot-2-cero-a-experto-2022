@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<body>
+		<!-- Creamos un fragmento identificado con el nombre "interceptor" para reutilizarlo en otras vistas -->
+		<section th:fragment="interceptor">
+			<div class="alert alert-success" th:if="${tiempoTranscurrido != null}">
+				<!-- Este atributo de vista "tiempoTranscurrido" se pasa desde nuestro interceptor "TiempoTranscurridoInterceptor" -->
+				<span th:text="'Tiempo transucrrido: ' + ${tiempoTranscurrido} + ' en milisegundos'"></span>
+			</div>
+		</section>
+	</body>
+</html>

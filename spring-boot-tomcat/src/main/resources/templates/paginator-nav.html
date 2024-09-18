@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<!-- Para poder usar Thymeleaf en este documento -->
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Todos o la mayoría de estilos usados en esta plantilla son de Bootstrap -->
+<!-- En Thymeleaf,'@' se usa para especificar rutas o urls,y '$' se usa para acceder al contenido de alguna variable o instancia que le pasamos desde algún controlador -->
+
+<body>
+	<!-- Con th:fragment de Thymeleaf creamos un fragmento etiquetado con 'paginator' -->
+	<nav th:fragment="paginator">
+		<!-- Lista no ordenada con las casillas del paginador -->
+		<ul class="pagination">
+			<!-- Casilla no numérica para ir a la primera página-->
+			<!-- Con th:text de Thymeleaf mostramos el valor de los textos cuyos identificadores se indican entre par�ntesis con '#' y que se obtienen de los archivos de idiomas 'messages_'  -->
+			<li class="page-item" th:class="${page.first? 'page-item disabled': 'page-item'}">
+				<!-- Con th:if de Thymeleaf, si ya estamos en la primera página,ponemos un span y no un enlace  -->
+				<span class="page-link" th:if="${page.first}" th:text="#{text.paginator.first}"></span>
+				<!-- Con th:if de Thymeleaf, si no estamos en la primera página,ponemos un enlace para poder ir a ella -->
+				<!-- Con th:href de Thymeleaf,nos vamos a la url indicada por la propiedad 'url' del atributo 'page'(se lo pasamos desde el controlador "ClienteController") con el parámetro 'page' puesto a la primera página(En la base de datos el índice de la paginación empieza en 0 y,por lo tanto, la primera pagína se corresponde con el índice 0 de la paginación) -->
+				<a class="page-link" th:if="${not page.first}" th:href="@{${page.url}(page=0)}" th:text="#{text.paginator.first}"></a>
+			</li>
+
+			<!-- Casilla no numérica para ir a la página anterior-->
+			<!-- Con th:utext de Thymeleaf mostramos el valor de los textos cuyos identificadores se indican entre par�ntesis con '#' y que se obtienen de los archivos de idiomas 'messages_' -->
+			<!-- A diferencia de 'th:text',usamos 'th:utext' para que no escape los caraceres especiales  -->
+			<li class="page-item" th:class="${not page.hasPrevious? 'page-item disabled': 'page-item'}">
+				<!-- Con th:if de Thymeleaf, si no hay página anterior porque estamos en la primera,ponemos un span y no un enlace  -->
+				<span class="page-link" th:if="${not page.hasPrevious}" th:utext="#{text.paginator.previous}"></span>
+				<!-- Con th:if de Thymeleaf, si hay página anterior porque no estamos en la primera,ponemos un enlace para poder ir a ella -->
+				<!-- Con th:href de Thymeleaf,nos vamos a la url indicada por la propiedad 'url' del atributo 'page'(se lo pasamos desde el controlador "ClienteController") con el parámetro 'page' puesto a la página anterior(es 'page.paginaActual-2' porque, desde el controlador "ClienteControler", el método handler "listar", mediante la clase "PageRender", actualiza la propiedad "paginaActual" del atributo "page" en 1 desplazamiento.Entonces, para ir a la página anterior, le tenemos que quitar 2 desplazamientos(la que se añadió en clase "PageRender" y la que hace falta para ir a la página anterior) -->
+				<a class="page-link" th:if="${page.hasPrevious}" th:href="@{${page.url}(page=${page.paginaActual-2})}" th:utext="#{text.paginator.previous}"></a>
+			</li>
+
+			<!-- Casillas numéricas -->
+			<!-- Con th:each de Thymeleaf, usamos la variable "item" para iterar la lista de casillas numéricas contenida en la propiedad 'paginas' del atributo 'page' que se lo pasamos desde el controlador "ClienteController" -->
+			<li class="page-item" th:each="item : ${page.paginas}" th:class="${item.actual? 'page-item active': 'page-item'}">
+				<!-- Con th:if de Thymeleaf, si la casilla contenida en la variable "item" se trata de la casilla donde estamos actualmente,ponemos un span y no un enlace  -->
+				<span class="page-link" th:if="${item.actual}" th:text="${item.numero}"></span>
+				<!-- Con th:if de Thymeleaf, si la casilla contenida en la variable "item" no se trata de la casilla donde estamos actualmente,ponemos un enlace para poder ir a ella -->
+				<!-- Con th:href de Thymeleaf,nos vamos a la url indicada por la propiedad 'url' del atributo 'page'(se lo pasamos desde el controlador "ClienteController") con el parámetro 'page' puesto al número de la casilla correspondiente(es 'item.numero-1' porque aquí en la vista mostramos las páginas desde el indice 1,pero en realidad,en la base de datos,el índice de la paginación empieza en 0) -->
+				<a class="page-link" th:if="${not item.actual}" th:href="@{${page.url}(page=${item.numero-1})}" th:text="${item.numero}"></a>
+			</li>
+
+			<!-- Casilla no numérica para ir a la página siguiente-->
+			<!-- Con th:utext de Thymeleaf mostramos el valor de los textos cuyos identificadores se indican entre par�ntesis con '#' y que se obtienen de los archivos de idiomas 'messages_' -->
+			<!-- A diferencia de 'th:text',usamos 'th_utext' para que no escape los caraceres especiales  -->
+			<li class="page-item" th:class="${not page.hasNext? 'page-item disabled': 'page-item'}">
+				<!-- Con th:if de Thymeleaf, si no hay página siguiente porque estamos en la última,ponemos un span y no un enlace  -->
+				<span class="page-link" th:if="${not page.hasNext}" th:utext="#{text.paginator.next}"></span>
+				<!-- Con th:if de Thymeleaf, si hay página siguiente porque no estamos en la última,ponemos un enlace para poder ir a ella -->
+				<!-- Con th:href de Thymeleaf,nos vamos a la url indicada por la propiedad 'url' del atributo 'page'(se lo pasamos desde el controlador "ClienteController") con el parámetro 'page' puesto a la página siguiente(es 'page.paginaActual' porque, desde el controlador "ClienteControler", el método handler "listar", mediante la clase "PageRender", actualiza la propiedad "paginaActual" del atributo "page" en 1 desplazamiento.Entonces, para ir a la página siguiente, le tenemos que quitar 1 desplazamiento(la que se añadió en clase "PageRender").Con lo cual, tenemos page.paginaActual+1-1=page.paginaActual  -->
+				<a class="page-link" th:if="${page.hasNext}" th:href="@{${page.url}(page=${page.paginaActual})}" th:utext="#{text.paginator.next}"></a>
+			</li>
+			
+			<!-- Casilla no numérica para ir a la última página -->
+			<!-- Con th:text de Thymeleaf mostramos el valor de los textos cuyos identificadores se indican entre par�ntesis con '#' y que se obtienen de los archivos de idiomas 'messages_'  -->
+			<li class="page-item" th:class="${page.last? 'page-item disabled': 'page-item'}">
+				<!-- Con th:if de Thymeleaf, si ya estamos en la última página,ponemos un span y no un enlace  -->
+				<span class="page-link" th:if="${page.last}" th:text="#{text.paginator.last}"></span>
+				<!-- Con th:if de Thymeleaf, si no estamos en la última página,ponemos un enlace para poder ir a ella -->
+				<!-- Con th:href de Thymeleaf,nos vamos a la url indicada por la propiedad 'url' del atributo 'page'(se lo pasamos desde el controlador "ClienteController") con el parámetro 'page' puesto a la última página(es 'page.totalPaginas-1' porque en la base de datos el índice de la paginación empieza en 0) -->
+				<a class="page-link" th:if="${not page.last}" th:href="@{${page.url}(page=${page.totalPaginas-1})}" th:text="#{text.paginator.last}"></a>
+			</li>
+		</ul>
+
+	</nav>
+
+</body>
+</html>

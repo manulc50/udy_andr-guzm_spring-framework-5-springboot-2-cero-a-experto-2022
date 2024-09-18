@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Lo sentimos, página no encontrada 404</title>
+</head>
+<body>
+	<h1>Ooops! página no encontrada</h1>
+	<!-- Los atributos "error","status","timestamp" y "path" son atributos predefinidos(no los hemos creado nosotros) que contienen el tipo de error, el código o estado del error, el timestamp(fecha y hora) del error y la ruta de la petición http respectivamente -->
+	<!-- En los errores de tipo 404(Not Found) no hay mensaje de error y tampoco hay trazas del error y, por eso, los atributo predefinido "message" y "trace" no se aplican en este caso porque no están definidos -->
+	<div th:text="${error}"></div>
+	<div th:text="${status}"></div>
+	<div th:text="${timestamp}"></div>
+	<hr/>
+	<div th:text="${path}"></div>
+</body>
+</html>

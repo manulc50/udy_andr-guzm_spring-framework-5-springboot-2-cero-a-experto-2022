@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"> <!-- Para poder usar Thymeleaf en este documento -->
+<body>
+<!-- Con th:fragment de Thymeleaf indicamos el nombre del fragmento -->
+<script type="text/javascript" th:fragment="javascript">
+
+$(document).ready(function(){ // Sobre el elemento document ejecutamos el metodo ready pasandole una funcion 
+	const urlAjax = $("#urlAjax").val();
+	
+	$("#buscar_producto").autocomplete({
+		source: function(request,response){ // Obtiene los datos con ajax(peticiones asincronas) y los muestra en el autocomplete
+			$.ajax({
+				url:urlAjax + request.term, // Peticion ajax sobre el controlador relacionado con el path contenido en "urlAjax" + el termino introducido en el input con id 'buscar_producto'(viene en el request de la peticion ajax)
+				dataType:"json", //Tipo de dato que deseamos.En este caso JSON
+				data:{ // Parametro que queremos pasar al request de la peticion
+					term: request.term
+				},
+				success:function(data){ //Si la peticion ha sido satisfactoria,recibimos los datos con este metodo
+					response($.map(data,function(item){ // En la respuesta de la peticion,para cada item de los datos obtenidos(data),vamos a aplicar con 'map' la devolucion del id,nombre y precio del producto
+						return{ // Devuelve para cada producto encontrado,un objeto con el id,nombre,precio del producto
+							value:item.id,
+							label:item.nombre,
+							precio:item.precio
+						};
+					}));
+				}
+			});
+		},
+		select: function(event,ui){ // Nos permite realizar una tarea indicada en la funcion cuando seleccionamos algun elemento del autocomplete
+			//$("#buscar_producto").val(ui.item.label); //Al elemento con HTML con id 'buscar_producto' le pasamos el nombre del item seleccionado
+			if(itemsHelper.hasProducto(ui.item.value)){ // Si existe el producto,significa que ya hay una linea de ese producto en la factura.
+				itemsHelper.incrementarCantidad(ui.item.value,ui.item.precio); // Entonces,incrementamos una cantidad de ese producto
+				return false; // retornamos para que no se ejecute el codigo de abajo,que se encarga de crear una nueva linea de producto
+			}
+			
+			var linea = $("#plantillaItemsFactura").html(); // Obtemos la estructura HTML asociada al elemnto con id 'plantillaItemsFactura'
+			linea = linea.replace(/{ID}/g,ui.item.value);// Reemplazamos el parametro ID de esa estructura HTML por el id del producto seleccionado de los productos devueltos a partir de la peticion ajax
+			linea = linea.replace(/{NOMBRE}/g,ui.item.label);// Reemplazamos el parametro NOMBRE de esa estructura HTML por el nombre del producto seleccionado de los productos devueltos a partir de la peticion ajax
+			linea = linea.replace(/{PRECIO}/g,ui.item.precio); // Reemplazamos el parametro PRECIO de esa estructura HTML por el precio del producto seleccionado de los productos devueltos a partir de la peticion ajax
+			$("#cargarItemProductos tbody").append(linea); // Agregamos la linea con los parametros anterirores reemplazados por los valores del producto seleccionado al cuerpo de la tabla con id 'cargarItemProductos'
+			itemsHelper.calcularImporte(ui.item.value,ui.item.precio,1);// Establecemos el importe total por defecto de la linea,esto es,para 1 cantidad
+			
+			return false;
+		}
+	});
+	
+	// Para evitar un error cuando se envia los datos del formulario de la factura al controlador FacturaController.Es necesario eliminar la plantilla 'plantillaItemsFactura' justo cuando se hace submit del formulario
+	$("form").submit(function(){ // Elimina el estructura HTML con id 'plantillaItemsFactura' justo cuando hacemos submit en el formulario.
+		$("#plantillaItemsFactura").remove();
+		return;
+	});
+	
+});
+
+var itemsHelper = { // Objeto que contiene el metodo para calcular el importe total de cada linea de producto
+		calcularImporte: function(id,precio,cantidad){ // Metodo que calcula el importe total de una linea de producto
+			$("#total_importe_" + id).html(parseInt(precio)*parseInt(cantidad)); // Obtiene el elemento con id 'total_importe' + id y con el metodo html() añadimos como nuevo contenido el resultado de precio*cantidad
+			this.calcularGranTotal(); // Cada vez que cambie el importe,tenemos que recalcular el gran total de la factura
+		},
+		hasProducto: function(id){ // Metodo que comprueba si un producto existe en las lineas de productos asociadas a la factura
+			var resultado = false; // Por defecto,ponemos el flag a false
+		
+			$('input[name="item_id[]"]').each(function(){ // Por cada elemento HTML que sea un input y su campo 'name' contenga 'item_id[]',
+				if(parseInt(id) == parseInt($(this).val())) // si existe alguna coincidencia entre el id que queremos comprobar con alguno del array,
+					resultado = true; // ponemos el flag a true
+			});
+			// NOTA: Si el elemento HTML es un input,accedemos a su valor en jquery con '$(this).val()'
+			return resultado; // Devolvemos el resultado
+		},
+		incrementarCantidad: function(id,precio){ // Metodo que incrementa la cantidad de un producto en una unidad
+			var cantidad = $("#cantidad_" + id) ? $("#cantidad_" + id).val() : 0; // Accedemos al elemento HTML con id 'cantidad_' + id y comprobamos si tiene valor.Si es asi,obtenemos ese valor.En caso contrario,devolvemos 0
+			$("#cantidad_" + id).val(++cantidad); //Al elemento anterior le asignamos un incremento en 1 de la cantidad
+			this.calcularImporte(id,precio,cantidad); // Volvemos a calcular el importe total con la nueva cantidad
+		},
+		eliminarLineaFactura: function(id){ // Metodo que elimina una linea de producto de la factura
+			$("#row_" + id).remove(); // Accedemos con jquery al elemento con id 'row_' +id y lo eliminamos
+			this.calcularGranTotal(); // Si quitamos una linea de producto,tenemos que recalcular el coste total de la factura
+		},
+		calcularGranTotal: function(){
+			var total = 0; // Por defecto,el total es 0
+			
+			// NOTA: Si el elemento HTML es un span,accedemos con jquery a su valor con '$(this).html()'
+			$('span[id^="total_importe_"]').each(function(){ // Para cada elemento HTML que sea span y su id contenga 'total_importe_',
+				total += parseInt($(this).html()); // vamos almacenando en 'total' las sumas parciales de cada span que contenga su campo id con 'total_importe_'
+			});
+			
+			$("#gran_total").html(total); // Ponemos el valor 'total' al elemento HTML con id 'gran_total'
+		}
+}
+
+</script> 
+</body>
+</html>

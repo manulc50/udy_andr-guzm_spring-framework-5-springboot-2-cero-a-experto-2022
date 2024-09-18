@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Built-By: manuel
+Build-Jdk: 17.0.1
+Implementation-Title: spring-boot-web-jsp
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: com.mlorenzo.springboot.app
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-boot
+ -starter-parent/spring-boot-web-jsp
+Created-By: Maven Integration for Eclipse
+

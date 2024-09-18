@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title th:text="${titulo}">Insert title here</title>
+		<!-- CDN de Bootstrap -->
+		<!-- Se comenta porque ahora cargamos Bootstrap de forma local -->
+		<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous"> -->
+		<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+	</head>
+	<body>
+		<!-- Reemplaza esta sección por la sección identificada por el nombre "interceptor" dentro de la vista "/componentes/tiempo" -->
+		<section th:replace="/componentes/tiempo::interceptor"></section>
+		<div class="container">
+			<a th:href="@{/form/v3}" class="btn btn-success btn-lg my-3">volver</a>
+			<ul class="list-group my-2">
+				<li class="list-group-item active" th:text="${titulo}"></li>
+				<li class="list-group-item" th:text="'Identificador: ' + ${user.identificador}"></li>
+				<li class="list-group-item" th:text="'Id. Empleado: ' + ${user.idEmpleado}"></li>
+			    <li class="list-group-item" th:text="'Nombre: ' + ${user.nombre}"></li>
+			    <li class="list-group-item" th:text="'Apellido: ' + ${user.apellido}"></li>
+				<li class="list-group-item" th:text="'Username: ' + ${user.username}"></li>
+				<li class="list-group-item" th:text="'Email: ' + ${user.email}"></li>
+				<li class="list-group-item" th:text="'Cuenta: ' + ${user.cuenta}"></li>
+				<li class="list-group-item" th:text="'Id. del país: ' + ${user.pais.id}"></li>
+				<li class="list-group-item" th:text="'Código del país: ' + ${user.pais.codigo}"></li>
+				<li class="list-group-item" th:text="'Nombre del país: ' + ${user.pais.nombre}"></li>
+				<!-- Usamos el objeto "dates" de Thymelead y su método "format" para dar formato a la fecha -->
+				<!--<li class="list-group-item" th:text="'Fecha de nacimiento: ' + ${#dates.format(user.fechaNacimiento, 'dd/MM/yyyy')}"></li>-->
+				<!-- De la misma forma, podemos usar el objeto de Thymeleaf "calendars" y su método "format" para dar formato a la fecha -->
+				<li class="list-group-item" th:text="'Fecha de nacimiento: ' + ${#calendars.format(user.fechaNacimiento, 'dd/MM/yyyy')}"></li>
+				<li class="list-group-item" th:text="'Género: ' + ${user.genero}"></li>
+				<li class="list-group-item" th:text="'Usuario habilitado: ' + ${user.habilitar}"></li>
+				<li class="list-group-item" th:text="'Valor oculto: ' + ${user.valorSecreto}"></li>
+			</ul>
+			<ul class="list-group my-2">
+				<li class="list-group-item active" th:text="'Roles'"></li>
+				<li class="list-group-item" th:each="role: ${user.roles}" th:text="${role.id} + ': ' + ${role.nombre} + ' => ' + ${role.role}"></li>
+			</ul>
+		</div>
+	</body>
+</html>

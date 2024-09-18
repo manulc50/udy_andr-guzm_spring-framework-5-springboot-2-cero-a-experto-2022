@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- Nota: El tipo de empaquetado puede ser Jar o War
+	Lo típico en Spring Boot es aplicar Jar debido a que trae un servidor Tomcat embebido o interno que es portable y permite publicar aplicaciones web en Jar con el comando "java -jar"
+	En general, uno piensa que War es para aplicaciones web y Jar es para aplicaciones de escritorio,pero con Spring Boot,tanto si es con Jar como con War, podemos tener nuestra aplicación web
+	Como buena práctica, siempre se recomienda aplicar Jar en aplicaciones con Spring Boot que usan plantillas o vistas hechas con Thymeleaf o en aplicaciones tipo Api Rest
+	Y solamente usamos War cuando que se quiere publicar la aplicación en un servidor externo(que no sea el Tomcat que viene interno en la aplicación Spring Boot) como por ejemplo,un Tomcat externo,un Glassfish,un JBoss,entre otros servidores
+	Y también usamos War si se quiere usar plantillas o vistas hechas con Jsp porque Jsp con Jar es incompatible y no se puede
+	En general, con Spring Boot, y con todo lo relacionado con Spring, es mucho mejor y recomendable trabajar con plantillas o vistas hechas con Thymeleaf en vez de Jsp porque es mucho más robusto y tiene muchas más ventajas como su compatibilidad con aplicaciones web reactivas como Spring WebFlux -->
+
+	<groupId>com.mlorenzo.springboot.app</groupId>
+	<artifactId>spring-boot-web-thymeleaf</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>spring-boot-web-thymeleaf</name>
+	<description>Demo project for Spring Boot</description>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.2.5.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>11</java.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.junit.vintage</groupId>
+					<artifactId>junit-vintage-engine</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+
+</project>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!-- Para poder usar Thymeleaf en este documento -->
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Todos o la mayoría de estilos usados en esta plantilla son de Bootstrap -->
+<!-- En Thymeleaf,'@' se usa para especificar rutas o urls,y '$' se usa para acceder al contenido de alguna variable o instancia que le pasamos desde algún controlador -->
+
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<!-- Esta tabla es un molde o prototipo de lo que representa una línea de producto  -->
+	<!-- Definimos el fragmento 'itemsFactura' para usarlo en la vista 'form' de la carpeta "factura" -->
+	<!-- En un principio la tabla va a estar oculta mediante la clase 'd-none' de Bootstrap -->
+	<table th:fragment="itemsFactura" class="d-none">
+		<tbody id="plantillaItemsFactura">
+			<!-- El parámetro {ID} se va a reemplazar dinámicamente por el id del producto -->
+			<tr id="row_{ID}">
+				<td class="d-none">
+					<!-- El parámetro {ID} se va a reemplazar dinámicamente por el id del producto -->
+					<input type="hidden" value="{ID}" name="item_id[]"/>
+				</td>
+				<!-- Estos parámetros, {NOMBRE} y {PRECIO}, se van a reemplazar dinámicamente por el nombre y el precio del producto -->
+				<td>{NOMBRE}</td>
+				<td>{PRECIO}</td>
+				<td>
+					<!-- Los parámetros {ID},{PRECIO} se van a reemplazar dinámicamente por el id y precio del producto -->
+					<!-- Con el evento "OnChanges",cuando cambie el valor de este input,se va a calcular el total del importe invocando el método 'calcularImporte' del objeto 'itemHelper'. Con this.value obtenemos el valor actual del input,que va ser la cantidad introducida -->
+					<input type="number" value="1" name="cantidad[]" id="cantidad_{ID}" class="form-control col-sm-4" onchange="itemsHelper.calcularImporte({ID},{PRECIO},this.value)"/>
+				</td>
+				<td>
+					<!-- El parámetro {ID} se va a reemplazar dinámicamente por el id del producto -->
+					<span id="total_importe_{ID}">0</span>
+				</td>
+				<td>
+					<!-- El parámetro {ID} se va a reemplazar dinámicamente por el id del product -->
+					<!-- Se llama al método 'eliminarLineaFactura' del objeto 'ItemsHelper' para eliminar una línea de producto de la factura -->
+					<a href="#" class="btn btn-danger btn-xs" onclick="itemsHelper.eliminarLineaFactura({ID})">x</a>
+				</td> 
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>

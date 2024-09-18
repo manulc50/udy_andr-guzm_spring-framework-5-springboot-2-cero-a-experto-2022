@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<!-- Agregamos el namespace para porder trabajar con Thymeleaf -->
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!--  Todos o la mayoría de estilos usados en esta plantilla son de Bootstrap -->
+<!-- En Thymeleaf,'@' se usa para especificar rutas o urls,y '$' se usa para acceder al contenido de alguna variable o instancia que le pasamos desde algún controlador -->
+
+<!-- Con th:fragment de Thymeleaf creamos un fragmento etiquetado con 'head' -->
+<head th:fragment="head">
+	<meta charset="UTF-8" />
+	<!-- Obtenemos del controlador el atributo 'titulo' y lo mostramos con th:text de Thymeleaf-->
+	<title th:text="'Spring Boot: MVC + Thymeleaf + Data JPA - ' + ${titulo}"></title>
+	<!-- Usamos los estilos css de Bootstrap -->
+	<!-- Con th:href de Thymeleaf cargamos el css estático que se localiza en la ruta '/css/bootstrap.min.css'.Las rutas siempre se indican con '@{}' -->
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+</head>
+<body>
+	<!-- Encabezado de página -->
+	<!-- Con th:fragment de Thymeleaf creamos un fragmento etiquetado con 'header' -->
+	<header th:fragment="header">
+		<!-- Navbar de la web oficial de Bootstrap -->
+		<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+			<!-- Con th:href de Thymeleaf navegamos a la ruta de inicio '/'.Las rutas siempre se indican con '@{}' -->
+			<a class="navbar-brand" th:href="@{/}">Spring Boot</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse">
+				<ul class="navbar-nav mr-auto">
+					<!-- Con th:href de Thymeleaf navegamos a la ruta de inicio '/'.Las rutas siempre se indican con '@{}' -->
+					<li class="nav-item active"><a class="nav-link" th:href="@{/}">Home</a></li>
+					<!-- Con th:href de Thymeleaf navegamos a la ruta '/listar'.Las rutas siempre se indican con '@{}' -->
+					<li class="nav-item"><a class="nav-link" href="#about" th:href="@{/listar}">Cliente</a></li>
+				</ul>
+			</div>
+		</nav>
+		
+		<!-- Con th:if de Thymeleaf validamos si existen los atributos de tipo Flash 'success','error','warning' e 'info'  del controlador.Y en caso de que alguno exista,se habilita el contenedor div correspondiente y mostramos su contenido con th:text, también de Thymeleaf-->
+		<div class="alert alert-success" th:if="${success != null}" th:text="${success}"></div>
+		<div class="alert alert-danger" th:if="${error != null}" th:text="${error}"></div>
+		<div class="alert alert-warning" th:if="${warning != null}" th:text="${warning}"></div>
+		<div class="alert alert-info" th:if="${info != null}" th:text="${info}"></div>
+	</header>
+	
+	<!-- Parte principal de la página -->
+	<div class="container"></div>
+	
+	<!--  Pie de página  -->
+	<!-- Con th:fragment de Thymeleaf creamos un fragmento etiquetado con 'footer' -->
+	<footer th:fragment="footer" class="container">
+		<hr />
+		<!-- Con th:href de Thymeleaf cargamos la imagen estática que se localiza en la ruta '/images/spring.png'.Las rutas siempre se indican con '@{}' -->
+		<img th:src="@{/images/spring.png}" alt="Spring logo" />
+		<p>
+			Powered by <a href="https://projects.spring.io/spring-boot/">Spring
+				Boot</a> y <a href="http://www.thymeleaf.org">Thymeleaf</a>.
+		</p>
+		<p>
+			Este proyecto fue desarrollado en IDE Eclipse + Spring Plugins (STS
+			Spring Tool), profesor Andrés Guzmán.<br /> &copy; Company 2017,
+			Inc. Todos los derechos reservados. Términos de uso y privacidad.<br />
+		</p>
+		<!-- Optional JavaScript -->
+		<!-- Usamos laslibrerías JS de JQuery y de Bootstrap -->
+		<!-- Es importante mantener este orden; primero JQuery, y después Bootstrap JS -->
+		<!-- Con th:href de Thymeleaf cargamos las librerías estáticas que se localizan en las rutas '/js/jquery-3.2.1.min.js' y '/js/bootstrap.min.js'.Las rutas siempre se indican con '@{}' -->
+		<script th:src="@{/js/jquery-3.2.1.min.js}"></script>
+		<script th:src="@{/js/bootstrap.min.js}"></script>
+	</footer>
+</body>
+</html>

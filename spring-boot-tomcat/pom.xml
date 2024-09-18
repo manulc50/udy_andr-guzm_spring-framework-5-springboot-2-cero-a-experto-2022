@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- Este proyecto es el mismo que el proyecto "spring-boot-data-jpa-facturas" pero adaptado para desplegarlo en un servidor externo como Tomcat -->
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.2.5.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+
+	<groupId>com.mlorenzo.springboot.tomcat.app</groupId>
+	<artifactId>spring-boot-tomcat</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<name>spring-boot-tomcat</name>
+	<description>Demo project for Spring Boot</description>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>11</java.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		
+		<!-- Librearias para usar Spring Security -->
+		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+		
+		<!-- Libreria para adaptar Thymelead con Spring Security -->
+		<dependency>
+			<groupId>org.thymeleaf.extras</groupId>
+			<artifactId>thymeleaf-extras-springsecurity5</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<!-- Como vamos a deplegar este proyecto en un servidor externo, tenemos que sobrescribir este dependencia incluida en
+		     la dependencia anterior "spring-boot-starter-web" para añadirle el scope "provided" y, de esta forma, no incluir
+		     esta dependencia dentro del war ya que se trata del servidor Tomcat embebido o interno -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- Libreria para pasar objetos a XML(Marshalling) y viceversa(Unmarshalling) -->
+		<dependency>
+    		<groupId>org.springframework</groupId>
+    		<artifactId>spring-oxm</artifactId>
+		</dependency>
+		<!-- Para pasar objetos a XML(Marshalling) y viceversa(Unmarshalling), hay que incluir, además, esta dependencia solo si se está usando un JDK 9 o superior -->
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+		</dependency>
+		<!-- Para pasar objetos a XML(Marshalling) y viceversa(Unmarshalling), hay que incluir, además, esta dependencia solo si se está usando un JDK 9 o superior -->
+		<dependency>
+			<groupId>org.glassfish.jaxb</groupId>
+			<artifactId>jaxb-runtime</artifactId>
+		</dependency>
+		<!-- Liberia para exportar a PDF -->
+		<dependency>
+    		<groupId>com.github.librepdf</groupId>
+    		<artifactId>openpdf</artifactId>
+    		<version>1.0.5</version>		
+		</dependency>
+		<!-- Libreria para exportar a CSV -->
+		<dependency>
+    		<groupId>net.sf.supercsv</groupId>
+    		<artifactId>super-csv</artifactId>
+    		<version>2.4.0</version>
+		</dependency>
+		<!-- Librerias necesarias para poder exportar datos a excel usando Apache POI -->
+		<dependency>
+    		<groupId>org.apache.poi</groupId>
+    		<artifactId>poi-ooxml</artifactId>
+    		<version>3.17</version>
+		</dependency>
+		<dependency>
+    		<groupId>org.apache.poi</groupId>
+    		<artifactId>poi</artifactId>
+    		<version>3.17</version>
+		</dependency>
+		
+	</dependencies>
+
+	<build>
+		<finalName>${project.name}</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+
+</project>

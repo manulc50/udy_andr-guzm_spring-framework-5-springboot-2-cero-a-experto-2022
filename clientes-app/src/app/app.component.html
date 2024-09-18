@@ -1,0 +1,19 @@
+<!-- Se renderiza la vista HTML asociada al componente con selector 'app-header' -->
+<app-header></app-header>
+<div class="container my-3 wrap">
+  <!--Con '{{ }}'' mostramos el contenido de la propiedad 'title' definida en la clase exportada del componente 'app.component.ts'-->
+  <!--<h1>{{ title }}!</h1>-->
+  <!--Con '{{ }}'' mostramos el contenido de las propiedades 'curso' y 'profesor' definidas en la clase exportada del componente 'app.component.ts'-->
+  <!--<ul>
+    <li>Curso: {{ curso }}</li>
+    <li>Profesor: {{ profesor }}</li>
+  </ul>-->
+  <!-- Se renderiza la vista HTML asociada al componente con selector 'app-directiva' -->
+  <!--<app-directiva></app-directiva>-->
+  <!-- Se renderiza la vista HTML asociada al componente con selector 'app-clientes' -->
+  <!--<app-clientes></app-clientes>-->
+  <!-- Es una directiva de Angular que indica el lugar donde se va a renderizar el contenido de cada ruta definida en el módulo principal de la aplicación 'app.module.ts'-->
+  <router-outlet></router-outlet>
+</div>
+<!-- Se renderiza la vista HTML asociada al componente con selector 'app-footer' -->
+<app-footer></app-footer>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!-- Para poder usar Thymeleaf en este documento -->
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Remplaza con Thymeleaf esta cabecera por otra(Usa la cabecera 'head' definida en la ruta 'layout/layout.html') con las hojas de estilo de Bootstrap entre otras cosas  -->
+<head th:replace="layout/layout :: head"></head>
+
+<!-- Todos o la mayoría de estilos usados en esta plantilla son de Bootstrap -->
+<!-- En Thymeleaf,'@' se usa para especificar rutas o urls,y '$' se usa para acceder al contenido de alguna variable o instancia que le pasamos desde algún controlador -->
+
+<body>
+	<!--  Con th:replace de Thymeleaf reemplazamos esta cabecera de página por la identificada con 'header' dentro de la vista 'layout' incluida en la carpeta 'layout' de 'templates' -->
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+		<div class="card border-primary text-center">
+			<!-- Con th:text de Thymeleaf mostramos el valor del texto cuyo identificador se indica entre paréntesis con '#' y que se obtiene de los archivos de idiomas 'messages_'  -->
+			<div class="card-header" th:text="#{text.login.titulo}">Por favor Sign In!</div>
+			<div class="card-body">
+				<!--  Formulario de inicio de sesión -->
+				<!-- Cuando hagamos un submit del formulario,lanza una petición http Post a la ruta indicada en el "action"('/login') -->
+				<form th:action="@{/login}" method="post">
+					<!-- Campo para el username -->
+					<div class="form-group col-sm-6">
+						<!-- Con th:placeholder de Thymeleaf establecemos el valor por defecto de este input con el texto cuyo identificador se indica entre paréntesis con '#' y se obtiene de los archivos de idiomas 'messages_'  -->
+						<!-- El atributo 'autofocus' hace que el cursor se situe automáticamente en este input cuando se cargue esta vista  -->
+						<!-- El atributo 'required' es para indicar que este input es obligatorio rellenarlo -->
+						<input type="text" name="username" id="username" class="form-control" th:placeholder="#{text.login.username}" autofocus required />
+					</div>
+					
+					<!-- Campo para la contraseña -->
+					<div class="form-group col-sm-6">
+						<!-- Con th:placeholder de Thymeleaf establecemos el valor por defecto de este input con el texto cuyo identificador se indica entre paréntesis con '#' y se obtiene de los archivos de idiomas 'messages_'  -->
+						<!-- El atributo 'required' es para indicar que este input es obligatorio rellenarlo -->
+						<input type="password" name="password" id="password" class="form-control" th:placeholder="#{text.login.password}" required />
+					</div>
+					
+					<!-- Botón de envío -->
+					<div class="form-group col-sm-6">
+						<!-- Con th:value de Thymeleaf establecemos el valor de este input con el texto cuyo identificador se indica entre paréntesis con '#' y se obtiene de los archivos de idiomas 'messages_'  -->
+						<!-- Este elemento de tipo submit va a realizar una peticion http de tipo POST hacia ruta indicada en "action" -->
+						<input type="submit" class="btn btn-lg btn-primary btn-block" th:value="#{text.login.boton}" />
+					</div>
+					
+					<!-- Seguridad con CSRF.En las versiones actuales de Spring Security no hace falta incorporar esta linea ya que,por defecto,automanticamente lo inserta en cualquier formulario de la aplicación.Si la ponemos manualmente no da fallo pero sería redundante -->
+					<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<!--  Con th:replace de Thymeleaf reemplazamos este footer o pie de página por el identificado con 'footer' dentro de la vista 'layout' incluida en la carpeta 'layout' de 'templates' -->
+	<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>
